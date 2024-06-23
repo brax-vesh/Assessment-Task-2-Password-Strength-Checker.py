@@ -90,6 +90,8 @@ def suggestions(text):
 
     suggestion_group = []
     
+    points_bar.value = 0
+
     password_score = 0
 
     # check for uppercase
@@ -132,6 +134,25 @@ def suggestions(text):
 
     if password_breached and password_common == False:
         password_score += 1
+
+    if password_score == 0:
+        points_bar.value = 0
+        rating.text = 'Password is Unusable'
+    elif password_score == 1:
+        points_bar.value = 20
+        rating.text = 'Password is Bad'
+    elif password_score == 2:
+        points_bar.value = 40
+        rating.text = 'Password Needs Some Work'
+    elif password_score == 3:
+        points_bar.value = 60
+        rating.text = 'Password is Ok'
+    elif password_score == 4:
+        points_bar.value = 80
+        rating.text = 'Password is Good'
+    elif password_score == 5:
+        points_bar.value = 100
+        rating.text = 'Password is Excellant!'
     
     print(password_score)
     print(suggestion_group)
@@ -209,6 +230,16 @@ tip_window.add(tip_paragraph, 2, 1)
 tip_btn = gp.Button(app, '💡', open_other_window)
 tip_btn.width = 2
 
+# Rating
+rating = gp.Label(app, '')
+app.add(rating, 5, 4, align='center')
+
+# Points Bar
+
+points_bar = gp.Progressbar(app)
+points_bar.width = 270
+app.add(points_bar, 4, 4, align='center')
+
 # Listeners
 password.add_event_listener('change', suggestions)
 
@@ -217,9 +248,6 @@ password.add_event_listener('change', suggestions)
 
 suggestion = gp.StyleLabel(app, "")
 app.add(suggestion, 3,1, align='left', valign='top')
-
-rating = gp.Label(app, "")
-app.add(rating, 5, 5,)
 
 app.add(app_name, 1, 1, align='left')
 app.add(director, 2, 4, align='center', valign='bottom')
@@ -241,6 +269,10 @@ app.run()
 # 5) shouldn't be a name
 
 # 6) password must contain a number
+# 7) password shouldn't contain numbers in succession e.g (1, 2, 3, 4, 5)
+# 8) password must contain a letter
+
+# 9) password musn't be a common or exposed password
 # 7) password shouldn't contain numbers in succession e.g (1, 2, 3, 4, 5)
 # 8) password must contain a letter
 
