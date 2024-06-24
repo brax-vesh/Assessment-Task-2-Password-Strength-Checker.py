@@ -111,50 +111,80 @@ def suggestions(text):
     password_breached = breached_password_searcher(text)
     symbol_found = symbol_searcher(text)
 
-    suggestion_group = []
-    suggestion_group.append('milk')
-    
+    suggestion_group1 = []
+    suggestion_group2 = []
+    suggestion_group3 = []
+
+    suggestions1_amount = 0
+    suggestions2_amount = 0
+    suggestions3_amount = 0
+
     points_bar.value = 0
 
     password_score = 0
-
-    # check for letter
-
-    if letter_found == True:
-        password_score += 1
-    else:
-        suggestion1.text = (f'Password should include, {suggestion_group}')
-
-    # check for uppercase    
-    if symbol_found == True:
-        password_score += 1
-
-
-    if uppercase_letter_found == True:
-        password_score += 1
-
-
-    # check for lowercase
-    
-    if lowercase_letter_found == True:
-        password_score += 1
-
-
-    # check for number
-    
-    if number_found == True:
-        password_score += 1
-
 
     # check for length over 12 characters
         
     if good_length == True:
         password_score += 1
     else:
-        print('length is bad....')
+        suggestion_group2.append('to be longer')
+        suggestions2_amount += 1
+
+    # check for letter
+
+    if letter_found == True:
+        password_score += 1
+    else:
+        suggestions1_amount += 1
+
+
+    # check for uppercase    
+    if symbol_found == True:
+        password_score += 1
+    else:
+        suggestion_group2.append('a symbol')
+        suggestions2_amount += 1
+
+
+    if uppercase_letter_found == True:
+        password_score += 1
+    else:
+        suggestion_group1.append('an uppercase letter')
+        suggestions1_amount += 1
+
+
+    # check for lowercase
+    
+    if lowercase_letter_found == True:
+        password_score += 1
+    else:
+        suggestion_group1.append('a lowercase letter')
+        suggestions1_amount += 1
+
+
+    # check for number
+    
+    if number_found == True:
+        password_score += 1
+    else:
+        suggestion_group2.append('a number')
+        suggestions2_amount += 1
 
     # breached, dictionary words and common passwords result in a 0 score
-        
+    
+    if password_breached == True:
+        suggestion_group3.append('compromised')
+        suggestions3_amount += 1
+
+    if password_common == True:
+        suggestion_group3.append('too common')
+        suggestions3_amount += 1
+
+    if password_in_dict == True:
+        suggestion_group3.append('in the english dictionary')
+        suggestions3_amount += 1
+    
     if password_breached or password_common or password_in_dict == True:
         password_score = 0
 
@@ -182,8 +212,30 @@ def suggestions(text):
         points_bar.value = 100
         rating.text = 'Password is strong'
 
+    suggestion_words1 = ', '.join(suggestion_group1)
+
+    if suggestions1_amount >= 1:
+        suggestion1.text = f'Password should include: {suggestion_words1}'
+    else:
+        suggestion1.text = ''
+
+
+    suggestion_words2 = ', '.join(suggestion_group2)
+
+    if suggestions2_amount >= 1:
+        suggestion2.text = f'Password needs: {suggestion_words2}'
+    else:
+        suggestion2.text = ''
+
+    suggestion_words3 = ', '.join(suggestion_group3)
+    
+    if suggestions3_amount >= 1:
+        suggestion3.text = f'Uh oh! Password is: {suggestion_words3}'
+    else:
+        suggestion3.text = ''
+
     print(password_score)
-    print(suggestion_group)
+    print(suggestion_group1)
         
 
     # if len(password.text) < 12:
@@ -357,7 +409,5 @@ app.run()
 # 6) password must contain a number
 # 7) password shouldn't contain numbers in succession e.g (1, 2, 3, 4, 5)
 # 8) password must contain a letter
-
-# 9) password musn't be a common or exposed password
 
 # 9) password musn't be a common or exposed password
