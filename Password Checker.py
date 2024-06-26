@@ -4,6 +4,13 @@ from PyDictionary import PyDictionary
 
 # Password Rating Functions
 
+def space_failsafe(text):
+    text = password.text
+    if text.isspace():
+        return True
+    else:
+        return False
+
 def letter_searcher(text):
     text = password.text
     for char in text:
@@ -90,6 +97,7 @@ def suggestions(text):
         # dictionary_on = dict_check_validation(text)
         # if dictionary_on == True:
         
+        only_space = space_failsafe(text)
         password_in_dict = dictionary_searcher(text)
         letter_found = letter_searcher(text)
         good_length = password_length(text)
@@ -109,6 +117,8 @@ def suggestions(text):
         suggestions3_amount = 0
 
         password_score = 0
+    
+
 
     # check for length over 12 characters
         
@@ -130,7 +140,7 @@ def suggestions(text):
         if symbol_found == True:
             password_score += 1
         else:
-            suggestion_group2.append('a symbol')
+            suggestion_group2.append('to contain a symbol (!,@,#,$,?)')
             suggestions2_amount += 1
 
 
@@ -155,13 +165,13 @@ def suggestions(text):
         if number_found == True:
             password_score += 1
         else:
-            suggestion_group2.append('a number')
+            suggestion_group2.append('to have a number')
             suggestions2_amount += 1
 
-    # breached, dictionary words and common passwords result in a 0 score
+    # breached, dictionary words, only spaces and common passwords result in a 0 score
     
         if password_breached == True:
-            suggestion_group3.append('compromised')
+            suggestion_group3.append('in a data breach')
             suggestions3_amount += 1
 
         if password_common == True:
@@ -169,7 +179,14 @@ def suggestions(text):
             suggestions3_amount += 1
 
         if password_in_dict == True:
-            suggestion_group3.append('in the english dictionary')
+            if len(text) >1:
+                if only_space == False:
+                    suggestion_group3.append('in the english dictionary')
+                    suggestions3_amount += 1
+
+        if only_space == True:
+            password_score = 0
+            suggestion_group3.append('comprised of only spaces, please use other characters')
             suggestions3_amount += 1
 
         # if dictionary_on == True:
@@ -184,10 +201,10 @@ def suggestions(text):
         # else:
         #     print('password_disabled')
     
-        if password_breached or password_common or password_in_dict == True:
+        if password_breached or password_common or password_in_dict and only_space == True:
             password_score = 0
 
-        if password_breached and password_common and password_in_dict == False:
+        if password_breached and password_common and password_in_dict and only_space== False:
             password_score += 1
 
         if password_score == 0:
@@ -211,7 +228,7 @@ def suggestions(text):
             star_rating.text = '★★★★★'
             rating.text = '" Password is strong "'
 
-        suggestion_words1 = ', '.join(suggestion_group1)
+        suggestion_words1 = ' AND '.join(suggestion_group1)
 
         if suggestions1_amount >= 1:
             suggestion1.text = f'Password should include: {suggestion_words1}'
@@ -219,14 +236,14 @@ def suggestions(text):
             suggestion1.text = ''
 
 
-        suggestion_words2 = ', '.join(suggestion_group2)
+        suggestion_words2 = ' AND '.join(suggestion_group2)
 
         if suggestions2_amount >= 1:
             suggestion2.text = f'Password needs: {suggestion_words2}'
         else:
             suggestion2.text = ''
 
-        suggestion_words3 = ', '.join(suggestion_group3)
+        suggestion_words3 = ' AND '.join(suggestion_group3)
     
         if suggestions3_amount >= 1:
             suggestion3.text = f'Warning! Password is: {suggestion_words3}'
@@ -331,7 +348,7 @@ tip_window.width = 700
 tip_window.height = 500
 tip_window.set_grid(10, 5)
 
-tip_title = gp.StyleLabel(tip_window, 'Here i have compiled some tips for a good password:')
+tip_title = gp.StyleLabel(tip_window, 'Tips For a Good Password:')
 tip_title.font_name = 'Times New Roman'
 tip_title.font_size = 25
 tips1 = gp.Label(tip_window, "1) Include an uppercase and lowercase letter in the password")
@@ -422,6 +439,3 @@ app.run()
 
 # 6) password must contain a number
 # 7) password shouldn't contain numbers in succession e.g (1, 2, 3, 4, 5)
-# 8) password must contain a letter
-
-# 9) password musn't be a common or exposed password
