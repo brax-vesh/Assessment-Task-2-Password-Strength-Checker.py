@@ -126,7 +126,10 @@ def suggestions(text):
             if only_space == False:
                 password_score += 1
                 suggestion_group2.append('good length')
-        else:
+            else:
+                suggestion_group2.append('not long enough')
+                suggestions2_amount += 1
+        elif good_length == False:
             suggestion_group2.append("not long enough")
             suggestions2_amount += 1
 
@@ -393,5 +396,6 @@ app.add(suggestion3, 5,1, align='left', valign='top')
 
 
 app.run()
+
 
 
