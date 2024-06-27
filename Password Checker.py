@@ -123,10 +123,11 @@ def suggestions(text):
     # check for length over 12 characters
         
         if good_length == True:
-            password_score += 1
-        else:
-            suggestion_group2.append('to be longer')
-            suggestions2_amount += 1
+            if only_space == False:
+                password_score += 1
+            else:
+                suggestion_group2.append('to be longer')
+                suggestions2_amount += 1
 
     # check for letter
 
@@ -435,6 +436,10 @@ app.run()
 # 3) a special character must be used
 
 # 4) password shouldn't be a dictionary word
+# 5) shouldn't be a name
+
+# 6) password must contain a number
+# 7) password shouldn't contain numbers in succession e.g (1, 2, 3, 4, 5)
 # 5) shouldn't be a name
 
 # 6) password must contain a number
